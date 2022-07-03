@@ -1,15 +1,21 @@
 #![allow(unused)]
 
+use std::fs::File;
+use std::io::BufReader;
+use std::path::PathBuf;
+
 use clap::Parser;
 use serde::{Serialize, Deserialize};
 
-/// Search for a pattern in a file and display the lines that contain it.
-#[derive(Parser)]
+/// Control file downloading
+#[derive(Parser, Debug)]
 struct Cli {
-    // Domain/Area
-    group: String,
-    // Specific command from list
-    command: String
+    /// Path to Download List YAML File
+    #[clap(parse(from_os_str), default_value="download_list.yaml")]
+    download_list_filename: PathBuf,
+    /// Specific show or movie to download
+    #[clap(long)]
+    matching: Option<String>
 }
 
 fn default_show_format_excludes() -> Vec<String> {
@@ -68,31 +74,10 @@ struct DownloadList {
 }
 
 fn main() {
-        let yamlconfig =
-"
-shows: 
-  - name: RuPaul's Drag Race All Stars
-    tmdbid: 85723
-    seasons: [6, 7]
-    start: Whatever.Drag.Race.
-    include_formats: [mp4, mkv]
-    exclude_formats: [tgz, tar]
-    exclude_string: [german]
-  - name: Star Trek Strange New Worlds
-    seasons: [1]
-    tmdbid: 103516
-    start: Star.Trek.Strange.New.Worlds.
+    let args = Cli::parse();
+    println!("Args: {:#?}", args);
 
-movies:
-  - name: Top Gun Maverick
-    tmdbid: 361743
-    start: Top.Gun.Maverick
-    exclude_string: [cam, german]
-
-";
-
-    let download_list: DownloadList = serde_yaml::from_str(&yamlconfig).unwrap();
-    // let args = Cli::parse();
-    // println!("Commands: ");
-    println!("{:#?}", download_list);
+    let download_list_file = File::open(args.download_list_filename).expect("File not found!");
+    let download_list: DownloadList = serde_yaml::from_reader(BufReader::new(download_list_file)).unwrap();
+    println!("Download List: {:#?}", download_list);
 }

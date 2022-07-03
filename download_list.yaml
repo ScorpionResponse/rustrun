@@ -1,0 +1,18 @@
+shows: 
+  - name: RuPaul's Drag Race All Stars
+    tmdbid: 85723
+    seasons: [6, 7]
+    start: Whatever.Drag.Race.
+    include_formats: [mp4, mkv]
+    exclude_formats: [tgz, tar]
+    exclude_string: [german]
+  - name: Star Trek Strange New Worlds
+    seasons: [1]
+    tmdbid: 103516
+    start: Star.Trek.Strange.New.Worlds.
+
+movies:
+  - name: Top Gun Maverick
+    tmdbid: 361743
+    start: Top.Gun.Maverick
+    exclude_string: [cam, german]

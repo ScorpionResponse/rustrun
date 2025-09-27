@@ -5,17 +5,17 @@ use std::io::BufReader;
 use std::path::PathBuf;
 
 use clap::Parser;
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 /// Control file downloading
 #[derive(Parser, Debug)]
 struct Cli {
     /// Path to Download List YAML File
-    #[clap(parse(from_os_str), default_value="download_list.yaml")]
+    #[clap(parse(from_os_str), default_value = "download_list.yaml")]
     download_list_filename: PathBuf,
     /// Specific show or movie to download
     #[clap(long)]
-    matching: Option<String>
+    matching: Option<String>,
 }
 
 fn default_show_format_excludes() -> Vec<String> {
@@ -70,7 +70,7 @@ struct Movie {
 #[derive(Serialize, Deserialize, Debug)]
 struct DownloadList {
     shows: Vec<TVShow>,
-    movies: Vec<Movie>
+    movies: Vec<Movie>,
 }
 
 fn main() {
@@ -78,6 +78,7 @@ fn main() {
     println!("Args: {:#?}", args);
 
     let download_list_file = File::open(args.download_list_filename).expect("File not found!");
-    let download_list: DownloadList = serde_yaml::from_reader(BufReader::new(download_list_file)).unwrap();
+    let download_list: DownloadList =
+        serde_yaml::from_reader(BufReader::new(download_list_file)).unwrap();
     println!("Download List: {:#?}", download_list);
 }
